@@ -152,6 +152,21 @@ DLL_EXPORT char* get_event_type(int event_id)
 
 	return create_agk_string("undefined");
 }
+
+DLL_EXPORT char* get_event_data(int event_id)
+{
+	int index = event_id - 1;
+	if (index < 0 || index > MAX_EVENTS - 1) return create_agk_string("");
+
+	ENetEvent event = events[index];
+
+	// Get the data, cast it to string and return an AGK string
+	char* str = (char*)malloc(event.packet->dataLength);
+	sprintf(str, "%s", event.packet->data);
+	char* agk_string = create_agk_string(str);
+	free(str);
+	return agk_string;
+}
 // End of event-related
 
 DLL_EXPORT void peer_send(int host_id, int peer_id, const char* message)
