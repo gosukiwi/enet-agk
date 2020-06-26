@@ -10,3 +10,6 @@ PeerSend,0,IIS,?peer_send@@YAXHHPBD@Z,0,0,0,0,?peer_send@@YAXHHPBD@Z
 HostBroadcast,0,IS,?host_broadcast@@YAXHPBD@Z,0,0,0,0,?host_broadcast@@YAXHPBD@Z
 HostConnect,I,ISI,?host_connect@@YAHHPBDH@Z,0,0,0,0,?host_connect@@YAHHPBDH@Z
 GetEventData,S,I,?get_event_data@@YAPADH@Z,0,0,0,0,?get_event_data@@YAPADH@Z
+GetEventData,S,I,?get_event_data@@YAPADH@Z,0,0,0,0,?get_event_data@@YAPADH@Z
+GetEventPeerAddressHost,S,I,?get_event_peer_address_host@@YAPADH@Z,0,0,0,0,?get_event_peer_address_host@@YAPADH@Z
+GetEventPeerAddressPort,I,I,?get_event_peer_address_port@@YAHH@Z,0,0,0,0,?get_event_peer_address_port@@YAHH@Z

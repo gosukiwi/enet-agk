@@ -85,7 +85,7 @@ DLL_EXPORT int create_server(int port, int max_clients)
 
 	address.host = ENET_HOST_ANY;
 	address.port = port;
-	server = enet_host_create(&address, max_clients, 2, 0, 0);
+	server = enet_host_create(&address, max_clients, 1, 0, 0);
 	int host_id = 0;
 
 	if (server != NULL) {
@@ -103,7 +103,7 @@ DLL_EXPORT int create_client()
 	if (host_count >= MAX_HOSTS - 1) return 0;
 
 	ENetHost* client;
-	client = enet_host_create(NULL, 1 , 2, 0, 0);
+	client = enet_host_create(NULL, 1 , 1, 0, 0);
 
 	if (client != NULL) {
 		servers[host_count] = client;
@@ -167,6 +167,32 @@ DLL_EXPORT char* get_event_data(int event_id)
 	free(str);
 	return agk_string;
 }
+
+DLL_EXPORT char* get_event_peer_address_host(int event_id)
+{
+	int index = event_id - 1;
+	if (index < 0 || index > MAX_EVENTS - 1) return 0;
+
+	ENetEvent event = events[index];
+	char str[16];
+	int ip = event.peer->address.host;
+	unsigned char bytes[4];
+    bytes[0] = ip & 0xFF;
+    bytes[1] = (ip >> 8) & 0xFF;
+    bytes[2] = (ip >> 16) & 0xFF;
+    bytes[3] = (ip >> 24) & 0xFF;   
+    sprintf(str, "%d.%d.%d.%d", bytes[3], bytes[2], bytes[1], bytes[0]); 
+	return create_agk_string(str);
+}
+
+DLL_EXPORT int get_event_peer_address_port(int event_id)
+{
+	int index = event_id - 1;
+	if (index < 0 || index > MAX_EVENTS - 1) return 0;
+
+	ENetEvent event = events[index];
+	return event.peer->address.port;
+}
 // End of event-related
 
 DLL_EXPORT void peer_send(int host_id, int peer_id, const char* message)
@@ -203,7 +229,7 @@ DLL_EXPORT int host_connect(int host_id, const char* hostname, int port)
 	address.port = port;
 
 	/* Initiate the connection, allocating the two channels 0 and 1. */
-	peer = enet_host_connect(host, &address, 2, 0);
+	peer = enet_host_connect(host, &address, 1, 0);
 	if (peer == NULL) {
 		return 0;
 	}
