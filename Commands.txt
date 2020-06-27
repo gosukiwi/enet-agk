@@ -6,7 +6,7 @@ DestroyHost,0,I,?destroy_host@@YAXH@Z,0,0,0,0,?destroy_host@@YAXH@Z
 CreateClient,I,0,?create_client@@YAHXZ,0,0,0,0,?create_client@@YAHXZ
 HostService,I,I,?host_service@@YAHH@Z,0,0,0,0,?host_service@@YAHH@Z
 GetEventType,S,I,?get_event_type@@YAPADH@Z,0,0,0,0,?get_event_type@@YAPADH@Z
-PeerSend,0,IIS,?peer_send@@YAXHHPBD@Z,0,0,0,0,?peer_send@@YAXHHPBD@Z
+PeerSend,0,IS,?peer_send@@YAXHPBD@Z,0,0,0,0,?peer_send@@YAXHPBD@Z
 HostBroadcast,0,IS,?host_broadcast@@YAXHPBD@Z,0,0,0,0,?host_broadcast@@YAXHPBD@Z
 HostConnect,I,ISI,?host_connect@@YAHHPBDH@Z,0,0,0,0,?host_connect@@YAHHPBDH@Z
 GetEventData,S,I,?get_event_data@@YAPADH@Z,0,0,0,0,?get_event_data@@YAPADH@Z

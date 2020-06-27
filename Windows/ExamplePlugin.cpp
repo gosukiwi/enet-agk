@@ -195,10 +195,9 @@ DLL_EXPORT int get_event_peer_address_port(int event_id)
 }
 // End of event-related
 
-DLL_EXPORT void peer_send(int host_id, int peer_id, const char* message)
+DLL_EXPORT void peer_send(int peer_id, const char* message)
 {
 	ENetPeer* peer = get_peer(peer_id);
-	ENetHost* host = get_host(host_id);
 	ENetPacket* packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE); // Just reliable packages for now
 
 	// Send the packet to the peer over channel id 0
