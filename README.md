@@ -4,7 +4,7 @@ This provides bindings for ENet networking library for AGK. Just copy the `Comma
     C:\Program Files\Steam\steamapps\common\App Game Kit 2\Tier 1\Compiler\Plugins\EnetAGK
     |_ Commands.txt
     |_ Windows.dll
-    
+
 Note that this only works on Windows 32 bits at the moment. If you want to add other platforms/architectures, feel free to make a PR.
 
 # Commands
@@ -12,19 +12,17 @@ Note that this only works on Windows 32 bits at the moment. If you want to add o
 ```
 Initialize() // 0 on failure, 1 on success
 Deinitialize()
-// Only supports `localhost` at the moment
-CreateServer(port, maxConnections) // returns an integer, `host_id` on success. 0 on failure.
-DestroyHost()
-CreateClient() // returns an integer, `host_id` on success. 0 on failure.
-HostService() // returns the `event_id` or 0 if failed
-GetEventType(host_id) // returns a string, the type can be "connect", "disconnect", "receive" or "none"
-PeerSend(host_id, peer_id, message$)
-HostBroadcast(host_id, message$)
-HostConnect(host_id, host$, port) // returns a `peer_id` or 0 if failed
-GetEventData(event_id) // returns a string, the data received
-GetEventData,S,I,?get_event_data@@YAPADH@Z,0,0,0,0,?get_event_data@@YAPADH@Z
-GetEventPeerAddressHost(event_id) // returns a string, the IP of the peer who sent the message
-GetEventPeerAddressPort(event_id) // returns an integer, the port used to receive the message from the peer
+CreateServer(port, maxConnections) // returns an integer, `hostId` on success. 0 on failure (only supports "localhost" at the moment)
+CreateClient() // returns an integer, `hostId` on success. 0 on failure.
+DestroyHost(hostId) // destroys a host and cleans up resources
+HostService() // returns the `eventId` or 0 if failed, main polling function called in each frame
+GetEventType(hostId) // returns a string, the type can be "connect", "disconnect", "receive" or "none"
+PeerSend(peerId, message$) // send a message to the specified peer
+HostBroadcast(hostId, message$) // sends a message to all peers in the host
+HostConnect(hostId, host$, port) // returns a `peerId` or 0 if failed
+GetEventData(eventId) // returns a string, the data received
+GetEventPeerAddressHost(eventId) // returns a string, the IP of the peer who sent the message
+GetEventPeerAddressPort(eventId) // returns an integer, the port used to receive the message from the peer
 ```
 
 ## Example
