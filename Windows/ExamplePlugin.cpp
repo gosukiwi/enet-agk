@@ -211,7 +211,7 @@ DLL_EXPORT void host_broadcast(int host_id, const char* message)
 	ENetPacket* packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE); // Just reliable packages for now
 
 	enet_host_broadcast(host, 0, packet);
-	// enet_host_flush(host);
+	enet_host_flush(host);
 }
 
 // Connects to a host and returns a `peer_id`
