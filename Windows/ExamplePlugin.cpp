@@ -115,6 +115,39 @@ DLL_EXPORT int create_client()
 	return 0;
 }
 
+// Connects to a host and returns a `peer_id`
+DLL_EXPORT int host_connect(int host_id, const char* hostname, int port)
+{
+	if (peer_count >= MAX_PEERS - 1) return 0;
+
+	ENetAddress address;
+	ENetEvent event;
+	ENetPeer* peer;
+	ENetHost* host = get_host(host_id);
+
+	if (host == NULL) return 0;
+
+	enet_address_set_host(&address, hostname);
+	address.port = port;
+
+	peer = enet_host_connect(host, &address, 1, 0);
+	if (peer == NULL) return 0;
+
+	/* Wait up to 5 seconds for the connection attempt to succeed. */
+	if (enet_host_service(host, &event, 5000) > 0 && event.type == ENET_EVENT_TYPE_CONNECT) {
+		peers[peer_count] = peer;
+		int peer_id = peer_count + 1;
+		peer_count++;
+		return peer_id;
+	}
+
+	/* Either the 5 seconds are up or a disconnect event was */
+	/* received. Reset the peer in the event the 5 seconds   */
+	/* had run out without any significant event.            */
+	enet_peer_reset(peer);
+	return 0;
+}
+
 DLL_EXPORT void destroy_host(int host_id)
 {
 	ENetHost* host = get_host(host_id);
@@ -127,9 +160,45 @@ DLL_EXPORT void destroy_host(int host_id)
 DLL_EXPORT int host_service(int host_id)
 {
 	ENetHost* host = get_host(host_id);
+	if (host == NULL) return 0;
+
 	ENetEvent event;
-	enet_host_service(host, &event, 0);
+	int result = enet_host_service(host, &event, 0);
+	if (result == 0) return 0;
+
 	return push_event(event);
+}
+
+DLL_EXPORT void host_flush(int host_id)
+{
+	ENetHost* host = get_host(host_id);
+	if (host == NULL) return;
+
+	enet_host_flush(host);
+}
+
+DLL_EXPORT char* get_host_address(int host_id)
+{
+	ENetHost* host = get_host(host_id);
+	if (host == NULL) return create_agk_string("");
+
+	char str[16];
+	int ip = host->address.host;
+	unsigned char bytes[4];
+    bytes[0] = ip & 0xFF;
+    bytes[1] = (ip >> 8) & 0xFF;
+    bytes[2] = (ip >> 16) & 0xFF;
+    bytes[3] = (ip >> 24) & 0xFF;   
+    sprintf(str, "%d.%d.%d.%d", bytes[0], bytes[1], bytes[2], bytes[3]);
+	return create_agk_string(str);
+}
+
+DLL_EXPORT int get_host_port(int host_id)
+{
+	ENetHost* host = get_host(host_id);
+	if (host == NULL) return 0;
+
+	return host->address.port;
 }
 
 // Event-related
@@ -193,6 +262,19 @@ DLL_EXPORT int get_event_peer_address_port(int event_id)
 	ENetEvent event = events[index];
 	return event.peer->address.port;
 }
+
+DLL_EXPORT void event_peer_send(int event_id, const char* message)
+{
+	int index = event_id - 1;
+	if (index < 0 || index > MAX_EVENTS - 1) return;
+
+	ENetEvent event = events[index];
+	ENetPacket* packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE); // Just reliable packages for now
+
+	// Send the packet to the peer over channel id 0
+	enet_peer_send(event.peer, 0, packet);
+	// enet_host_flush(host);
+}
 // End of event-related
 
 DLL_EXPORT void peer_send(int peer_id, const char* message)
@@ -211,39 +293,5 @@ DLL_EXPORT void host_broadcast(int host_id, const char* message)
 	ENetPacket* packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE); // Just reliable packages for now
 
 	enet_host_broadcast(host, 0, packet);
-	enet_host_flush(host);
-}
-
-// Connects to a host and returns a `peer_id`
-DLL_EXPORT int host_connect(int host_id, const char* hostname, int port)
-{
-	if (peer_count >= MAX_PEERS - 1) return 0;
-
-	ENetAddress address;
-	ENetEvent event;
-	ENetPeer* peer;
-	ENetHost* host = get_host(host_id);
-
-	enet_address_set_host(&address, hostname);
-	address.port = port;
-
-	/* Initiate the connection, allocating the two channels 0 and 1. */
-	peer = enet_host_connect(host, &address, 1, 0);
-	if (peer == NULL) {
-		return 0;
-	}
-
-	/* Wait up to 5 seconds for the connection attempt to succeed. */
-	if (enet_host_service(host, &event, 5000) > 0 && event.type == ENET_EVENT_TYPE_CONNECT) {
-		peers[peer_count] = peer;
-		int peer_id = peer_count + 1;
-		peer_count++;
-		return peer_id;
-	}
-
-	/* Either the 5 seconds are up or a disconnect event was */
-	/* received. Reset the peer in the event the 5 seconds   */
-	/* had run out without any significant event.            */
-	enet_peer_reset(peer);
-	return 0;
+	// enet_host_flush(host);
 }
