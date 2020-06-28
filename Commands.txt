@@ -7,9 +7,9 @@ CreateClient,I,0,?create_client@@YAHXZ,0,0,0,0,?create_client@@YAHXZ
 HostService,I,I,?host_service@@YAHH@Z,0,0,0,0,?host_service@@YAHH@Z
 HostFlush,0,I,?host_flush@@YAXH@Z,0,0,0,0,?host_flush@@YAXH@Z
 GetEventType,S,I,?get_event_type@@YAPADH@Z,0,0,0,0,?get_event_type@@YAPADH@Z
-PeerSend,0,IS,?peer_send@@YAXHPBD@Z,0,0,0,0,?peer_send@@YAXHPBD@Z
-EventPeerSend,0,IS,?event_peer_send@@YAXHPBD@Z,0,0,0,0,?event_peer_send@@YAXHPBD@Z
-HostBroadcast,0,IS,?host_broadcast@@YAXHPBD@Z,0,0,0,0,?host_broadcast@@YAXHPBD@Z
+PeerSend,0,ISS,?peer_send@@YAXHPBD0@Z,0,0,0,0,?peer_send@@YAXHPBD0@Z
+EventPeerSend,0,ISS,?event_peer_send@@YAXHPBD0@Z,0,0,0,0,?event_peer_send@@YAXHPBD0@Z
+HostBroadcast,0,ISS,?host_broadcast@@YAXHPBD0@Z,0,0,0,0,?host_broadcast@@YAXHPBD0@Z
 HostConnect,I,ISI,?host_connect@@YAHHPBDH@Z,0,0,0,0,?host_connect@@YAHHPBDH@Z
 GetEventData,S,I,?get_event_data@@YAPADH@Z,0,0,0,0,?get_event_data@@YAPADH@Z
 GetEventPeerAddressHost,S,I,?get_event_peer_address_host@@YAPADH@Z,0,0,0,0,?get_event_peer_address_host@@YAPADH@Z

@@ -62,6 +62,20 @@ char* create_agk_string(const char* str)
 	return str2;
 }
 
+ENetPacket* create_enet_packet(const char* message, const char* flag_str)
+{
+	enet_uint32 flags = ENET_PACKET_FLAG_RELIABLE;
+	if (strcmp("unsequenced", flag_str) == 0) {
+		flags = ENET_PACKET_FLAG_UNSEQUENCED;
+	} else if (strcmp("reliable", flag_str) == 0) {
+		flags = ENET_PACKET_FLAG_RELIABLE;
+	} else if (strcmp("unreliable", flag_str) == 0) {
+		flags = 0;
+	}
+
+	return enet_packet_create(message, strlen(message) + 1, flags);
+}
+
 // Exports
 // =======
 DLL_EXPORT int initialize()
@@ -263,35 +277,32 @@ DLL_EXPORT int get_event_peer_address_port(int event_id)
 	return event.peer->address.port;
 }
 
-DLL_EXPORT void event_peer_send(int event_id, const char* message)
+DLL_EXPORT void event_peer_send(int event_id, const char* message, const char* flag)
 {
 	int index = event_id - 1;
 	if (index < 0 || index > MAX_EVENTS - 1) return;
 
 	ENetEvent event = events[index];
-	ENetPacket* packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE); // Just reliable packages for now
+	ENetPacket* packet = create_enet_packet(message, flag);
 
 	// Send the packet to the peer over channel id 0
 	enet_peer_send(event.peer, 0, packet);
-	// enet_host_flush(host);
 }
 // End of event-related
 
-DLL_EXPORT void peer_send(int peer_id, const char* message)
+DLL_EXPORT void peer_send(int peer_id, const char* message, const char* flag)
 {
 	ENetPeer* peer = get_peer(peer_id);
-	ENetPacket* packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE); // Just reliable packages for now
+	ENetPacket* packet = create_enet_packet(message, flag);
 
 	// Send the packet to the peer over channel id 0
 	enet_peer_send(peer, 0, packet);
-	// enet_host_flush(host);
 }
 
-DLL_EXPORT void host_broadcast(int host_id, const char* message)
+DLL_EXPORT void host_broadcast(int host_id, const char* message, const char* flag)
 {
 	ENetHost* host = get_host(host_id);
-	ENetPacket* packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE); // Just reliable packages for now
+	ENetPacket* packet = create_enet_packet(message, flag);
 
 	enet_host_broadcast(host, 0, packet);
-	// enet_host_flush(host);
 }
