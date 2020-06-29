@@ -7,6 +7,7 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <stdio.h>
+#include <thread>
 #include "../AGKLibraryCommands.h"
 #include "enet/enet.h"
 
@@ -74,6 +75,59 @@ ENetPacket* create_enet_packet(const char* message, const char* flag_str)
 	}
 
 	return enet_packet_create(message, strlen(message) + 1, flags);
+}
+
+enum AsyncConnectStatus {
+	ASYNC_CONNECT_UNINITIALIZED = 0,
+	ASYNC_CONNECT_STARTED		= 1,
+	ASYNC_CONNECT_FAILED		= 2,
+	ASYNC_CONNECT_SUCCEEDED		= 3
+};
+AsyncConnectStatus async_connect_status = ASYNC_CONNECT_UNINITIALIZED;
+int async_connect_peer_id = 0;
+void helper_host_connect_async(int host_id, const char* hostname, int port)
+{
+	async_connect_status = ASYNC_CONNECT_STARTED;
+
+	if (peer_count >= MAX_PEERS - 1) {
+		async_connect_status = ASYNC_CONNECT_FAILED;
+		return;
+	}
+
+	ENetAddress address;
+	ENetEvent event;
+	ENetPeer* peer;
+	ENetHost* host = get_host(host_id);
+
+	if (host == NULL) {
+		async_connect_status = ASYNC_CONNECT_FAILED;
+		return;
+	}
+
+
+	enet_address_set_host(&address, hostname);
+	address.port = port;
+
+	peer = enet_host_connect(host, &address, 1, 0);
+	if (peer == NULL) {
+		async_connect_status = ASYNC_CONNECT_FAILED;
+		return;
+	}
+
+	/* Wait up to 5 seconds for the connection attempt to succeed. */
+	if (enet_host_service(host, &event, 5000) > 0 && event.type == ENET_EVENT_TYPE_CONNECT) {
+		peers[peer_count] = peer;
+		async_connect_peer_id = peer_count + 1;
+		peer_count++;
+		async_connect_status = ASYNC_CONNECT_SUCCEEDED;
+		return;
+	}
+
+	/* Either the 5 seconds are up or a disconnect event was */
+	/* received. Reset the peer in the event the 5 seconds   */
+	/* had run out without any significant event.            */
+	enet_peer_reset(peer);
+	async_connect_status = ASYNC_CONNECT_FAILED;
 }
 
 // Exports
@@ -160,6 +214,36 @@ DLL_EXPORT int host_connect(int host_id, const char* hostname, int port)
 	/* had run out without any significant event.            */
 	enet_peer_reset(peer);
 	return 0;
+}
+
+DLL_EXPORT void host_connect_async(int host_id, const char* hostname, int port)
+{
+	std::thread t1(helper_host_connect_async, host_id, hostname, port);
+	t1.detach();
+}
+
+DLL_EXPORT char* host_connect_async_poll()
+{
+	switch (async_connect_status) {
+	case ASYNC_CONNECT_UNINITIALIZED:
+		return create_agk_string("uninitialized");
+	case ASYNC_CONNECT_STARTED:
+		return create_agk_string("started");
+	case ASYNC_CONNECT_FAILED:
+		return create_agk_string("failed");
+	case ASYNC_CONNECT_SUCCEEDED:
+		async_connect_status = ASYNC_CONNECT_UNINITIALIZED;
+		return create_agk_string("succeeded");
+	}
+
+	return create_agk_string("failed");
+}
+
+DLL_EXPORT int host_connect_async_peer_id()
+{
+	int peer_id = async_connect_peer_id;
+	async_connect_peer_id = 0;
+	return peer_id;
 }
 
 DLL_EXPORT void destroy_host(int host_id)

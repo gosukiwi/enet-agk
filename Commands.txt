@@ -11,6 +11,9 @@ PeerSend,0,ISS,?peer_send@@YAXHPBD0@Z,0,0,0,0,?peer_send@@YAXHPBD0@Z
 EventPeerSend,0,ISS,?event_peer_send@@YAXHPBD0@Z,0,0,0,0,?event_peer_send@@YAXHPBD0@Z
 HostBroadcast,0,ISS,?host_broadcast@@YAXHPBD0@Z,0,0,0,0,?host_broadcast@@YAXHPBD0@Z
 HostConnect,I,ISI,?host_connect@@YAHHPBDH@Z,0,0,0,0,?host_connect@@YAHHPBDH@Z
+HostConnectAsync,0,ISI,?host_connect_async@@YAXHPBDH@Z,0,0,0,0,?host_connect_async@@YAXHPBDH@Z
+HostConnectAsyncPoll,S,0,?host_connect_async_poll@@YAPADXZ,0,0,0,0,?host_connect_async_poll@@YAPADXZ
+HostConnectAsyncPeerId,I,0,?host_connect_async_peer_id@@YAHXZ,0,0,0,0,?host_connect_async_peer_id@@YAHXZ
 GetEventData,S,I,?get_event_data@@YAPADH@Z,0,0,0,0,?get_event_data@@YAPADH@Z
 GetEventPeerAddressHost,S,I,?get_event_peer_address_host@@YAPADH@Z,0,0,0,0,?get_event_peer_address_host@@YAPADH@Z
 GetEventPeerAddressPort,I,I,?get_event_peer_address_port@@YAHH@Z,0,0,0,0,?get_event_peer_address_port@@YAHH@Z
