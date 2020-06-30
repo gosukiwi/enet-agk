@@ -3,7 +3,7 @@
   <ItemGroup>
     <ClCompile Include="..\AGKLibraryCommands.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="ExamplePlugin.cpp" />
+    <ClCompile Include="EnetAGK.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\AGKLibraryCommands.h" />
