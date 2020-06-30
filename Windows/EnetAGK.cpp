@@ -299,6 +299,15 @@ DLL_EXPORT int get_host_port(int host_id)
 	return host->address.port;
 }
 
+DLL_EXPORT int set_host_compress_with_range_coder(int host_id)
+{
+	ENetHost* host = get_host(host_id);
+	if (host == NULL) return 0;
+	if (enet_host_compress_with_range_coder(host) == 0) return 1;
+
+	return 0;
+}
+
 // Event-related
 DLL_EXPORT char* get_event_type(int event_id)
 {

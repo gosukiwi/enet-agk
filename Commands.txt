@@ -19,3 +19,4 @@ GetEventPeerAddressHost,S,I,?get_event_peer_address_host@@YAPADH@Z,0,0,0,0,?get_
 GetEventPeerAddressPort,I,I,?get_event_peer_address_port@@YAHH@Z,0,0,0,0,?get_event_peer_address_port@@YAHH@Z
 GetHostAddress,S,I,?get_host_address@@YAPADH@Z,0,0,0,0,?get_host_address@@YAPEADH@Z
 GetHostPort,I,I,?get_host_port@@YAHH@Z,0,0,0,0,?get_host_port@@YAHH@Z
+SetHostCompressWithRangeCoder,I,I,?set_host_compress_with_range_coder@@YAHH@Z,0,0,0,0,?set_host_compress_with_range_coder@@YAHH@Z

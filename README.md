@@ -15,11 +15,12 @@ macOS), feel free to make a PR.
 
 ```
 // initializing/deinitializing
-Initialize() // 0 on failure, 1 on success
-Deinitialize()
+Initialize() // returns an integer, 0 on failure, 1 on success
+Deinitialize() // returns void, deinitializes ENet and cleans up resources
 CreateServer(port, maxConnections) // returns an integer, `hostId` on success. 0 on failure (only supports "localhost" at the moment)
 CreateClient() // returns an integer, `hostId` on success. 0 on failure.
-DestroyHost(hostId) // destroys a host and cleans up resources
+DestroyHost(hostId) // returns void, destroys a host and cleans up resources
+SetHostCompressWithRangeCoder(hostId) // returns an integer, 1 if succeeded, 0 on failure. Enables ENet's default compressor
 
 // connecting
 HostConnect(hostId, host$, port) // returns a `peerId` or 0 if failed
