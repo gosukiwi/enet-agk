@@ -56,22 +56,22 @@ if host = 0 then Log("Failed to create server")
 end
 
 do
-	event = Enet.HostService(host)
+  event = Enet.HostService(host)
   if event = 0 then continue
 
-	eventType$ = Enet.GetEventType(event)
-	if eventType$ = "connect"
-		Log("Client connected: " + Enet.GetEventPeerAddressHost(event) + ":" + Str(Enet.GetEventPeerAddressPort(event)))
+  eventType$ = Enet.GetEventType(event)
+  if eventType$ = "connect"
+    Log("Client connected: " + Enet.GetEventPeerAddressHost(event) + ":" + Str(Enet.GetEventPeerAddressPort(event)))
     ENet.EventPeerSend(event, "Hello there!", "reliable")
-	elseif eventType$ = "receive"
-		Print("Client sent message: " + Enet.GetEventData(event))
-	elseif eventType$ = "disconnect"
-		Log("Client disconnected.")
-	endif
+  elseif eventType$ = "receive"
+    Print("Client sent message: " + Enet.GetEventData(event))
+  elseif eventType$ = "disconnect"
+    Log("Client disconnected.")
+  endif
 
-	Print("[SERVER]")
-	Print(Str(ScreenFPS()))
-	Sync()
+  Print("[SERVER]")
+  Print(Str(ScreenFPS()))
+  Sync()
 loop
 ```
 
@@ -87,21 +87,21 @@ peer = Enet.HostConnect(host, "localhost", 1234)
 if peer = 0 then Log("Failed to connect")
 
 do
-	event = Enet.HostService(host)
+  event = Enet.HostService(host)
   if event = 0 then continue
 
-	eventType$ = Enet.GetEventType(event)
-	if eventType$ = "receive"
-		Log("Got message from server: " + Enet.GetEventData(event))
-	elseif eventType$ = "disconnect"
+  eventType$ = Enet.GetEventType(event)
+  if eventType$ = "receive"
+    Log("Got message from server: " + Enet.GetEventData(event))
+  elseif eventType$ = "disconnect"
     Log("Disconnected from server!")
-	endif
+  endif
 
   // Note, you don't want to send messages too many times per second unless the
   // server can take it.
   Enet.PeerSend(host, peer, "Hello!", "unreliable")
 
-	Print("[CLIENT]")
+  Print("[CLIENT]")
   Print(ScreenFPS())
   Sync()
 loop
