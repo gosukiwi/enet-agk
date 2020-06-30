@@ -1,18 +1,15 @@
 # ENet bindings for AppGameKit Tier 1
 This provides bindings for ENet networking library for AGK. Just copy the
-`Commands.txt` and `Windows.dll` files to your compiler path, inside the
+`Commands.txt`, `Windows.dll`, and `Windows64.dll` files to your compiler's
 `Plugins` folder. Something like:
 
     C:\Program Files\Steam\steamapps\common\App Game Kit 2\Tier 1\Compiler\Plugins\EnetAGK
     |_ Commands.txt
     |_ Windows.dll
+    |_ Windows64.dll
 
-Note that this only works on Windows 32 bits at the moment. It is possible to
-build the project in 64 bits mode, but I currently have no way to see the
-exported  functions as Dependency Walker freezes on my computer and the
-alternative app I use  works only for 32 bits DLLs.
-
-If you want to add other platforms/architectures, feel free to make a PR.
+Note that this only works on Windows. If you want to add other platforms (Linux,
+macOS), feel free to make a PR.
 
 # Commands
 
