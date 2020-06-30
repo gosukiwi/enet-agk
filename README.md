@@ -32,11 +32,11 @@ HostConnectAsyncPeerId() // returns an integer, the peer id of the most recent a
 
 // main loop
 HostService(hostId) // returns the `eventId` or 0 if failed, main polling function called in each frame
-HostFlush(hostId) // flush all the pending packets in the given host, does not trigger events
-GetEventType(hostId) // returns a string, the type can be "connect", "disconnect", "receive" or "none"
-PeerSend(peerId, message$, mode$) // send a message to the specified peer, mode$ can be "reliable", "unsequenced", or "unreliable"
-EventPeerSend(eventId, message$ mode$) // sends a message to the emitter of the event
-HostBroadcast(hostId, message$, mode$) // sends a message to all peers in the host
+HostFlush(hostId) // returns void, flush all the pending packets in the given host, does not trigger events
+GetEventType(eventId) // returns a string, the type can be "connect", "disconnect", "receive" or "none"
+PeerSend(peerId, message$, mode$) // returns void, send a message to the specified peer, `mode$` can be "reliable", "unsequenced", or "unreliable"
+EventPeerSend(eventId, message$ mode$) // returns void, sends a message to the emitter of the event
+HostBroadcast(hostId, message$, mode$) // returns void, sends a message to all peers in the host
 GetEventData(eventId) // returns a string, the data received
 GetEventPeerAddressHost(eventId) // returns a string, the IP of the peer who sent the message
 GetEventPeerAddressPort(eventId) // returns an integer, the port used to receive the message from the peer
