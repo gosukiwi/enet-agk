@@ -104,6 +104,7 @@ do
 loop
 ```
 
-__IMPORTANT__ The event ids are reused, as they are re-used so many times. So
-__do not save a reference to them__, just get whatever you need from them and
-let them go.
+__IMPORTANT__ The event ids are reused, they will repeat often and only make
+sense when consuming them right away. You can pass them to other functions and
+work with them normally, just __do not save a reference to them__, as the event
+id will be pointing to another event internally after a few seconds.
