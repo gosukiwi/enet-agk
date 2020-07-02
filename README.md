@@ -109,3 +109,6 @@ __IMPORTANT__ The event ids are reused, they will repeat often and only make
 sense when consuming them right away. You can pass them to other functions and
 work with them normally, just __do not save a reference to them__, as the event
 id will be pointing to another event internally after a few seconds.
+
+# Complete Example
+You can see a more complete code example here: https://github.com/gosukiwi/Enet-AGK-Demo/tree/master
